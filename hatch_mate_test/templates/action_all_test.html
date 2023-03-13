@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Mate全流程测试</title>
+    <link rel="stylesheet" href="../static/css/bootstrap.css">
+</head>
+<body>
+<script type="text/javascript" src="../static/js/bootstrap.js">
+</script>
+<nav class="navbar navbar-expand-lg bg-body-tertiary"style="background-color: #e3f2fd;">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="action_test">Mate机构测试</a>
+<!--    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">-->
+<!--      <span class="navbar-toggler-icon"></span>-->
+<!--    </button>-->
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link " aria-current="page" href="action_tube_move">挑管测试</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="action_rack_move">移盒测试</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="action_all_test">全流程测试</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+
+<div class="input-group mb-3">
+  <span class="input-group-text">执行循环次数</span>
+  <input type="text" id="all_loop_times" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+    <span class="input-group-text">挑管管子数</span>
+  <input type="text" id="all_tube_num" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+</div>
+<div class="input-group mb-3">
+    <span class="input-group-text" >盒子类型</span>
+  <input type="text" id="all_rack" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+
+  <span class="input-group-text" >管子类型</span>
+  <input type="text" id="all_tube" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+
+</div>
+<div class="input-group mb-3">
+<span class="input-group-text">挑管顺序</span>
+  <select class="form-select" id="move_ways">
+    <option value="1" selected>随机挑管</option>
+    <option value="2">顺序挑管</option>
+  </select></div>
+
+<button type="button" id="but_storing" class="btn btn-info btn-lg" onclick="move_all()">开始执行</button>
+<button type="button" id="but_stop" class="btn btn-danger btn-lg" onclick="stop()">停止</button>
+  <button class="btn btn-success btn-lg" type="button" data-bs-toggle="collapse" data-bs-target="#collapseWidthExample" aria-expanded="false" aria-controls="collapseWidthExample">
+    使用方法
+  </button>
+
+
+<div style="min-height: 120px;">
+  <div class="collapse collapse-horizontal" id="collapseWidthExample">
+    <div class="card card-body" style="width: 400px;left:50px">
+      <p>1.请确认首页连接测试正常</p>
+      <p>2.请依次填入所需正确的参数</p>
+      <p>3.填写完参数后先通过触摸屏将传送带机构伸出</p>
+      <p>4.将带管盒放入转运桶，并将转运桶放在传送带上</p>
+      <p>5.在挑管平台B位置上放置一个空盒</p>
+      <p>6.点击开始执行按钮</p>
+      <p><strong>注意：若中途挑管机构出现异常需要重启本服务，机构恢复原位，重新开始执行</strong></p>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+function move_all(){
+var all_loop_times = document.getElementById('all_loop_times').value;
+var all_tube_num = document.getElementById('all_tube_num').value;
+var all_rack = document.getElementById('all_rack').value;
+var all_tube = document.getElementById('all_tube').value;
+var move_ways = $('#move_ways option:selected').val();
+$.ajax({
+url:'/action_move_all',
+type:'get',
+data:{all_loop_times:all_loop_times,all_tube_num:all_tube_num,all_rack:all_rack,all_tube:all_tube,
+move_ways:move_ways
+},
+success:function(msg){
+alert(msg)
+}
+})}
+
+
+function stop(){
+$.ajax({
+url:'/stop',
+type:'get',
+success:function(msg){
+alert(msg)
+}
+})}
+
+</script>
+</body>
+</html>

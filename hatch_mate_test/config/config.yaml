@@ -1,0 +1,27 @@
+plc_config:
+  BOX_AREA:
+    1: "\u8D77\u59CB\u4F4D"
+    2: "\u76EE\u6807\u4F4D"
+    3: "\u4E2D\u8F6C\u4F4D"
+  BOX_PLACE:
+    "\u6311\u7BA1\u533A": 2
+    "\u8F6C\u8FD0\u6876": 1
+  PLC_AGREEMENT: SLMP
+  PLC_IP: 192.168.0.197
+  PLC_PORT: '8007'
+rabbitmq_config:
+  connect_info:
+    host: 127.0.0.1
+    password: admin
+    port: '5672'
+    username: admin
+    virtual_host: /
+  consumer:
+    exchange: genepoint.control.to.dispatch
+    exchange_type: fanout
+    queue: genepoint.control.to.dispatch
+    routing_key: ''
+  producer:
+    exchange: genepoint.dispatch.to.control
+    exchange_type: direct
+    routing_key: '503'
