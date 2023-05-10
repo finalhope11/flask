@@ -35,7 +35,7 @@ def action_test():
 
 
 if __name__ == '__main__':
-    # server = pywsgi.WSGIServer(('0.0.0.0',5000),app)
+    # server = pywsgi.WSGIServer(('0.0.0.0',12345),app)
     # server.serve_forever()
     app.run(debug=True)
     # print(os.urandom(24))

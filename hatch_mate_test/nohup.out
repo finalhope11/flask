@@ -1,0 +1,6 @@
+{'plc_config': {'BOX_AREA': {1: '起始位', 2: '目标位', 3: '中转位'}, 'BOX_PLACE': {'挑管区': 2, '转运桶': 1}, 'PLC_AGREEMENT': 'SLMP', 'PLC_IP': '192.168.0.197', 'PLC_PORT': '8007'}, 'rabbitmq_config': {'connect_info': {'host': '127.0.0.1', 'password': 'admin', 'port': '5672', 'username': 'admin', 'virtual_host': '/'}, 'consumer': {'exchange': 'genepoint.control.to.dispatch', 'exchange_type': 'fanout', 'queue': 'genepoint.control.to.dispatch', 'routing_key': ''}, 'producer': {'exchange': 'genepoint.dispatch.to.control', 'exchange_type': 'direct', 'routing_key': '503'}}}
+ * Serving Flask app 'app'
+ * Debug mode: on
+Address already in use
+Port 5000 is in use by another program. Either identify and stop that program, or start the server with a different port.
+{'plc_config': {'BOX_AREA': {1: '起始位', 2: '目标位', 3: '中转位'}, 'BOX_PLACE': {'挑管区': 2, '转运桶': 1}, 'PLC_AGREEMENT': 'SLMP', 'PLC_IP': '192.168.0.197', 'PLC_PORT': '8007'}, 'rabbitmq_config': {'connect_info': {'host': '127.0.0.1', 'password': 'admin', 'port': '5672', 'username': 'admin', 'virtual_host': '/'}, 'consumer': {'exchange': 'genepoint.control.to.dispatch', 'exchange_type': 'fanout', 'queue': 'genepoint.control.to.dispatch', 'routing_key': ''}, 'producer': {'exchange': 'genepoint.dispatch.to.control', 'exchange_type': 'direct', 'routing_key': '503'}}}
