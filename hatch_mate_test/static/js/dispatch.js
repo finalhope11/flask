@@ -5,26 +5,38 @@ function change_()
 let get_storing = document.getElementById('mission_storing');
 let get_moving = document.getElementById('mission_moving');
 let get_retrieving = document.getElementById('mission_retrieving');
+let get_buc = document.getElementById('mission_buc');
 let get_mission_storing = document.getElementById('storing');
 let get_mission_moving = document.getElementById('moving');
 let get_mission_retrieving = document.getElementById('retrieving');
+let get_mission_buc = document.getElementById('buc_sto_or_ret');
 if (get_storing.checked)
 {
 get_mission_retrieving.setAttribute('hidden',true)
 get_mission_moving.setAttribute('hidden',true)
+get_mission_buc.setAttribute('hidden',true)
 get_mission_storing.removeAttribute('hidden')
 }
 else if (get_moving.checked)
 {
 get_mission_retrieving.setAttribute('hidden',true)
 get_mission_storing.setAttribute('hidden',true)
+get_mission_buc.setAttribute('hidden',true)
 get_mission_moving.removeAttribute('hidden')
 }
 else if (get_retrieving.checked)
 {
 get_mission_storing.setAttribute('hidden',true)
 get_mission_moving.setAttribute('hidden',true)
+get_mission_buc.setAttribute('hidden',true)
 get_mission_retrieving.removeAttribute('hidden')
+}
+else if (get_buc.checked)
+{
+get_mission_storing.setAttribute('hidden',true)
+get_mission_moving.setAttribute('hidden',true)
+get_mission_retrieving.setAttribute('hidden',true)
+get_mission_buc.removeAttribute('hidden')
 }
 }
 
@@ -170,6 +182,33 @@ alert(msg)
 }}
 
 
+function start_buc_storing()
+{
+$(staticBackdrop).modal('show')
+show_ = setInterval(show_status,2000);
+$.ajax({
+url:'/dispatch_buc_sto',
+type:'POST',
+success:function(msg){
+alert(msg)
+}
+})
+}
+
+function start_buc_retrieving()
+{
+$(staticBackdrop).modal('show')
+show_ = setInterval(show_status,2000);
+$.ajax({
+url:'/dispatch_buc_ret',
+type:'POST',
+success:function(msg){
+alert(msg)
+}
+})
+}
+
+
 function show_status(){
 $.ajax({
 url:'/show_status',
@@ -179,6 +218,7 @@ success:function(data){
 var show_content = document.getElementById('show_status');
 if (data != 'None'){
 var reg = RegExp('开始')
+var mes_close = RegExp('waiting_close')
 if (data.match(reg)){
 show_content.innerHTML = data +'<br>'
 }
@@ -187,6 +227,14 @@ clearInterval(show_)
 }
 else{
 show_content.innerHTML += data +'<br>'
+if (data.match(mes_close)){
+alert('请放入或取出转运桶后，选择确定按钮关门')
+$.ajax({
+url:'/close_door',
+type:'GET',
+async:false
+})
+}
 }
 }}
 })

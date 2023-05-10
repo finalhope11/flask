@@ -67,14 +67,17 @@ function test_con(){
 var ip = document.getElementById('ip').value;
 var port = document.getElementById('port').value;
 var select =  $('#select option:selected').val();
+
 $.ajax({
 url:'/action_test_con',
 type:'get',
+async: true,
 data:{IP:ip,PORT:port,SELECT:select},
 success:function(msg){
 alert(msg)
 }
 })
+alert('开始连接')
 }
 </script>
 

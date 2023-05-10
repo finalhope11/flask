@@ -63,4 +63,20 @@ def show_status():
     else:
         return 'None'
 
+@dispatch.route('/dispatch_buc_ret',methods = ['POST'])
+def dispatch_buc_ret():
+    global dis_con
+    dis_con.buc_sto_or_ret(0)
+    return '执行完成'
 
+@dispatch.route('/dispatch_buc_sto',methods = ['POST'])
+def dispatch_buc_sto():
+    global dis_con
+    dis_con.buc_sto_or_ret(1)
+    return '执行完成'
+
+@dispatch.route('/close_door',methods = ['GET'])
+def close_door():
+    global dis_con
+    dis_con.send_close()
+    return '关门完成'

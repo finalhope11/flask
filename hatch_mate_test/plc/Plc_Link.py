@@ -15,7 +15,33 @@ import time
 
 bit_type = 1  # 1 表示为16个bit位的比特寄存器（基恩士PLC）； 2表示8个bit位的比特寄存器(三菱FN-5X)
 
+class A:
+    IsSuccess = True
+    Content = [1]
 
+
+class OperationMock:
+    def ConnectServer(self):
+        return A
+
+    def ReadInt16(self, *args, **kwargs):
+        return A
+
+    def ReadUInt16(self, *args, **kwargs):
+        return A
+
+    def WriteInt16(self, *args, **kwargs):
+        return A
+
+    def WriteUInt16(self, *args, **kwargs):
+        return A
+    def ConnectClose(self):
+        pass
+
+
+class MelsecMcNetMock(OperationMock):
+    def __init__(self, *args, **kwargs):
+        pass
 
 class TcpLink:
     def __init__(self, ip, port, agreement):
@@ -23,6 +49,7 @@ class TcpLink:
         self.port = port
         self.agreement = agreement
         pass
+
 
     # 建立链接
     def create_link(self):
@@ -35,7 +62,10 @@ class TcpLink:
         while link_flag < 3:
             time.sleep(0.001)
             link_flag += 1
+
             if self.agreement == 'SLMP':
+                print('lianjie')
+                # tcp_link = MelsecMcNetMock()
                 tcp_link = MelsecMcNet(self.ip, self.port)
             else:
                 tcp_link = ModbusTcpNet(self.ip, self.port)

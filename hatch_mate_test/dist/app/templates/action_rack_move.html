@@ -8,6 +8,8 @@
 <body>
 <script type="text/javascript" src="../static/js/bootstrap.js">
 </script>
+<script type="text/javascript" src="../static/js/jquery-3.6.3.min.js">
+</script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary"style="background-color: #e3f2fd;" >
   <div class="container-fluid">
     <a class="navbar-brand" href="action_test">Mate机构测试</a>
@@ -47,8 +49,9 @@
     <div class="card card-body" style="width: 400px;left:50px">
       <p>1.请确认首页连接测试正常</p>
       <p>2.请依次填入所需正确的参数</p>
-      <p>3.填写完参数后将两个盒子分别放置在A、B位置上</p>
-      <p>4.盒子放入后点击开始执行按钮</p>
+      <p>3.填写完参数后手动将两个盒子分别放置在A、B位置上</p>
+      <p>4.再将转运桶盖通过测试程序打开</p>
+      <p>5.盒子放入后点击开始执行按钮</p>
       <p><strong>注意：若中途机构出现异常需要重启本服务，机构恢复原位，重新开始执行</strong></p>
     </div>
   </div>
@@ -59,15 +62,16 @@
 function move_rack(){
 var stor_rack = document.getElementById('stor_rack').value;
 var stor_tube = document.getElementById('stor_tube').value;
+alert('开始执行');
 $.ajax({
 url:'/action_move_rack',
 type:'get',
-data:{stor_rack:stor_rack,stor_tube:stor_tube
-},
+data:{stor_rack:stor_rack,stor_tube:stor_tube},
 success:function(msg){
 alert(msg)
 }
-})}
+})
+}
 
 function stop(){
 $.ajax({

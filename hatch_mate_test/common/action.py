@@ -25,6 +25,10 @@ class Action:
         Returns:
 
         """
+        if action_id == 1:
+            logger.info('推出交接机构')
+        else:
+            logger.info('收回交接机构')
         # 将执行指令写入寄存器
         self.link.write_uint16('D349', action_id)
         time.sleep(0.05)
@@ -83,6 +87,10 @@ class Action:
         """
         # self.link.write_int16('D384', 0)
         self.link.write_uint16('D389', action_id)
+        if action_id ==2:
+            logger.info('关桶盖和下降')
+        else:
+            logger.info('顶升和开桶盖')
         time.sleep(0.05)
         # 触发
         self.link.write_int16('D384', 1)
@@ -106,6 +114,10 @@ class Action:
         Returns:
 
         """
+        if action_id == 2:
+            logger.info('关闭挑管区保温盖')
+        else:
+            logger.info('开挑管区保温盖')
         self.link.write_uint16('D409', action_id)  # 写入命令
         time.sleep(0.05)
         # 触发
@@ -138,7 +150,12 @@ class Action:
             logger.info("正在挑管区内移盒，从%s移动到%s" % (get_all_config['plc_config']['BOX_AREA'][source_box],
                                                get_all_config['plc_config']['BOX_AREA'][dest_box]))
         else:
-            logger.info("正在移盒，")
+            if source=='转运桶':
+                logger.info("正在从转运桶移盒至挑管区，从%s移动到%s" % (get_all_config['plc_config']['BOX_AREA'][source_box],
+                                               get_all_config['plc_config']['BOX_AREA'][dest_box]))
+            else:
+                logger.info("正在从挑管区移盒至转运桶，从%s移动到%s" % (get_all_config['plc_config']['BOX_AREA'][source_box],
+                                                       get_all_config['plc_config']['BOX_AREA'][dest_box]))
         if source not in get_all_config['plc_config']['BOX_PLACE'].keys() or dest not in get_all_config['plc_config']['BOX_PLACE'].keys():
             print("盒子位置参数设置错误")
             return -65535
@@ -184,10 +201,11 @@ class Action:
         Returns: 结束寄存器值
         """
         tube = {48: 8, 96: 12, 100: 10, 126: 14, 196: 14}  # 盒子管子总数对应的每行管子数量
-        print('正在写入寄存器')
+        # print('正在写入寄存器')
         self.link.write_uint16("D509", 0)  # 将指令寄存器归零
         self.link.write_int16("D504", 0)  # 将触发寄存器归零
-        print('写入已完成')
+        # print('写入已完成')
+        logger.info('挑管数据已写入')
         time.sleep(0.5)
         # 写入
         tube_nu = tube_nu if action_id == 1 else tube_nu / 2
@@ -353,3 +371,9 @@ class Action:
         self.link.close_link()
 
     pass
+
+    if __name__=='__main__':
+        print(get_all_config['plc_config']['BOX_PLACE'].values())
+        source_place, dest_place = get_all_config['plc_config']['BOX_PLACE']['转运桶'], get_all_config['plc_config']['BOX_PLACE']['挑管区']
+        if 1 not in get_all_config['plc_config']['BOX_PLACE'].keys() or 2 not in get_all_config['plc_config']['BOX_PLACE'].keys():
+            print("盒子位置参数设置错误")

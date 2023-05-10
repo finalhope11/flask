@@ -85,7 +85,7 @@
     <div class="card card-body" style="width: 400px;left:50px">
       <p>1.请确认首页连接测试正常</p>
       <p>2.请依次填入所需正确的参数（若挑管方式是两盒间挑管,单盒挑管开始顺序可不用管）</p>
-      <p>3.填写完参数后将有管盒放置在A位置（挑管平台左侧）</p>
+      <p>3.填写完参数后将有管盒放置在A位置（挑管平台左侧），空盒放置在B位置（挑管平台右侧）</p>
       <p>4.盒子放入后点击开始执行按钮</p>
       <p><strong>注意：若中途挑管机构出现异常需要重启本服务，机构恢复原位，重新开始执行</strong></p>
     </div>
@@ -108,12 +108,13 @@ url:'/action_move_tube',
 type:'get',
 data:{stor_rackA:stor_rackA,stor_tubeA:stor_tubeA,stor_rackB:stor_rackB,stor_tubeB:stor_tubeB,
 loop_times:loop_times,tube_nums:tube_nums,move_ways:move_ways,is_ran:is_ran,move_order:move_order
-
 },
 success:function(msg){
 alert(msg)
 }
-})}
+})
+alert('开始执行')
+}
 
 
 function stop(){
@@ -123,7 +124,8 @@ type:'get',
 success:function(msg){
 alert(msg)
 }
-})}
+})
+}
 
 </script>
 

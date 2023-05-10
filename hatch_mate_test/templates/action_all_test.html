@@ -8,6 +8,8 @@
 <body>
 <script type="text/javascript" src="../static/js/bootstrap.js">
 </script>
+<script type="text/javascript" src="../static/js/jquery-3.6.3.min.js">
+</script>
 <nav class="navbar navbar-expand-lg bg-body-tertiary"style="background-color: #e3f2fd;">
   <div class="container-fluid">
     <a class="navbar-brand" href="action_test">Mate机构测试</a>
@@ -38,11 +40,19 @@
   <input type="text" id="all_tube_num" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 </div>
 <div class="input-group mb-3">
-    <span class="input-group-text" >盒子类型</span>
-  <input type="text" id="all_rack" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+    <span class="input-group-text" >A盒子类型</span>
+  <input type="text" id="all_rackA" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 
-  <span class="input-group-text" >管子类型</span>
-  <input type="text" id="all_tube" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+  <span class="input-group-text" >A管子类型</span>
+  <input type="text" id="all_tubeA" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+
+</div>
+<div class="input-group mb-3">
+    <span class="input-group-text" >B盒子类型</span>
+  <input type="text" id="all_rackB" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+
+  <span class="input-group-text" >B管子类型</span>
+  <input type="text" id="all_tubeB" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
 
 </div>
 <div class="input-group mb-3">
@@ -65,8 +75,8 @@
       <p>1.请确认首页连接测试正常</p>
       <p>2.请依次填入所需正确的参数</p>
       <p>3.填写完参数后先通过触摸屏将传送带机构伸出</p>
-      <p>4.将带管盒放入转运桶，并将转运桶放在传送带上</p>
-      <p>5.在挑管平台B位置上放置一个空盒</p>
+      <p>4.将带管满盒放入转运桶，并将转运桶放在传送带上</p>
+      <p>5.在挑管平台B（目标）位置上放置一个空盒</p>
       <p>6.点击开始执行按钮</p>
       <p><strong>注意：若中途挑管机构出现异常需要重启本服务，机构恢复原位，重新开始执行</strong></p>
     </div>
@@ -77,19 +87,23 @@
 function move_all(){
 var all_loop_times = document.getElementById('all_loop_times').value;
 var all_tube_num = document.getElementById('all_tube_num').value;
-var all_rack = document.getElementById('all_rack').value;
-var all_tube = document.getElementById('all_tube').value;
+var all_rackA = document.getElementById('all_rackA').value;
+var all_tubeA = document.getElementById('all_tubeA').value;
+var all_rackB = document.getElementById('all_rackB').value;
+var all_tubeB = document.getElementById('all_tubeB').value;
 var move_ways = $('#move_ways option:selected').val();
 $.ajax({
 url:'/action_move_all',
 type:'get',
-data:{all_loop_times:all_loop_times,all_tube_num:all_tube_num,all_rack:all_rack,all_tube:all_tube,
+data:{all_loop_times:all_loop_times,all_tube_num:all_tube_num,all_rackA:all_rackA,all_tubeA:all_tubeA,
+all_rackB:all_rackB,all_tubeB:all_tubeB,
 move_ways:move_ways
 },
 success:function(msg){
 alert(msg)
 }
-})}
+})
+alert('开始执行')}
 
 
 function stop(){

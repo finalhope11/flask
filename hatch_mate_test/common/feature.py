@@ -47,7 +47,7 @@ class Test(Action):
                 minute = round(end - start) // 60
                 second = round(end - start) % 60
                 action_flag = '完成第 %d 次挑管，耗时 %d 分 %d 秒（包含移盒的时间）' if action_id == 1 else '完成第 %d 次挑管，耗时 %d 分 %d 秒'
-                logger.info(action_flag % (i, minute, second))
+                logger.info(action_flag % (i+1, minute, second))
             else:
                 logger.info('收到停止指令，停止完成')
                 break
@@ -118,21 +118,33 @@ class Test(Action):
                 result = self._belt(action_id=1)
                 if result[0] != 1:
                     return -65535
+                # 收回交接机构
+                result = self._platform(action_id =2)
+                if result[0] != 1:
+                    return -65535
 
                 # 顶升和开桶盖
                 result = self._cap(action_id=1)
                 if result[0] != 1:
                     return -65535
-
                 # 开挑管区保温盖
                 result = self._insulation(action_id=1)
                 if result[0] != 1:
                     return -65535
-
-                # 从转运桶移动冻存盒到挑管区
-                result = self._move_box(source=1, dest=2, source_box=1, dest_box=1)
-                if result[0] != 1:
-                    return -65535
+                if i%2 == 1:
+                    # 从转运桶移动冻存盒到挑管区A
+                    result = self._move_box(box_id=box_id_a,source='转运桶', dest='挑管区', source_box=1, dest_box=1)
+                    if result[0] != 1:
+                        return -65535
+                elif i%2 == 0:
+                    # 从转运桶移动冻存盒到挑管区B
+                    result = self._move_box(box_id=box_id_a,source='转运桶', dest='挑管区', source_box=1, dest_box=3)
+                    if result[0] != 1:
+                        return -65535
+                    # 从挑管区3号位移动挑管区2号位
+                    result = self._move_box(box_id=box_id_a,source='挑管区', dest='挑管区', source_box=3, dest_box=1)
+                    if result[0] != 1:
+                        return -65535
 
                 # 关桶盖和下降
                 result = self._cap(action_id=2)
@@ -140,6 +152,7 @@ class Test(Action):
                     return -65535
 
                 # 在挑管区内挑管
+                # print('在挑管区内挑管')
                 result = self._move_tube(action_id=1, tube_nu=tube_nu, box_id_a=box_id_a, box_id_b=box_id_b,
                                               tube_id_a=tube_id_a, tube_id_b=tube_id_b, random_flag=random_flag)
                 if result[0] != 1:
@@ -149,14 +162,13 @@ class Test(Action):
                 result = self._cap(action_id=1)
                 if result[0] != 1:
                     return -65535
-
                 # 从挑管区移动冻存盒到转运桶
-                result = self._move_box(source=2, dest=1, source_box=2, dest_box=1)
+                result = self._move_box(box_id=box_id_b,source='挑管区', dest='转运桶', source_box=2, dest_box=1)
                 if result[0] != 1:
                     return -65535
 
                 # 在挑管区内将盒子从1号位置移动到2号位置
-                result = self._move_box(source=2, dest=2, source_box=1, dest_box=2)
+                result = self._move_box(box_id=box_id_a,source='挑管区', dest='挑管区', source_box=1, dest_box=2)
                 if result[0] != 1:
                     return -65535
 
@@ -169,11 +181,15 @@ class Test(Action):
                 result = self._cap(action_id=2)
                 if result[0] != 1:
                     return -65535
-
-                # 皮带送出桶
-                result = self._belt(action_id=2)
+                # 推出交接机构
+                result = self._platform(action_id=1)
                 if result[0] != 1:
                     return -65535
+
+                # 皮带送出桶
+                # result = self._belt(action_id=2)
+                # if result[0] != 1:
+                #     return -65535
                 end = time.time()
                 minute = round(end - start) // 60
                 second = round(end - start) % 60

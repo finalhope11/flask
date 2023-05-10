@@ -133,9 +133,13 @@ class Dispatch():
         souce_area = self.get_tube_no(data['source_move'])
         target_area = self.get_tube_no(data['target_move'])
         for i in range(int(data['tube_num'])):
+            s_no = random.choice(souce_area)
+            t_no = random.choice(target_area)
+            souce_area.remove(s_no)
+            target_area.remove(t_no)
             tube.append({
-                        "s_no": random.choice(souce_area),
-                        "t_no": random.choice(target_area),
+                        "s_no": s_no,
+                        "t_no": t_no,
                         "id": str(random.randint(1000,100000000000))
                     })
         return tube
@@ -269,7 +273,7 @@ class Dispatch():
         self.send(self.storing_begin(data))
         while True:
             if self.msg:
-                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('Response') != 'task_activate':
+                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('response') != 'task_activate':
                     if self.msg[0]['data']['type'] == 'ready':
                         self.out_log(0,self.msg[0])
                         self.send(self.begin_running(self.response, self.task))
@@ -280,8 +284,8 @@ class Dispatch():
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] == 'opened':
                         self.out_log(0, self.msg[0])
-                        time.sleep(10)
                         self.status.append('等待10s转动皮带，请将桶放入或者取出')
+                        time.sleep(10)
                         if self.buc_in == 0:
                             self.send(self.pail_storing(self.response, self.task))
                             self.buc_in = 1
@@ -291,7 +295,6 @@ class Dispatch():
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] == 'waiting_close':
                         self.out_log(0, self.msg[0])
-                        self.send(self.close(self.response, self.task))
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] in ['end', 'abnormal_end', 'reject']:
                         self.out_log(0, self.msg[0])
@@ -307,6 +310,10 @@ class Dispatch():
             else:
                 continue
 
+    def send_close(self):
+        self.send(self.close(self.response, self.task))
+
+
     def retrieving(self, data):
         self.log.info('---------------------开始取盒任务---------------------')
         self.status.append('开始取盒任务')
@@ -314,36 +321,35 @@ class Dispatch():
         self.send(self.retrieving_begin(data))
         while True:
             if self.msg:
-                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('Response') != 'report_data':
+                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('response') != 'task_activate':
                     if self.msg[0]['data']['type'] == 'ready':
-                        self.status.append('收到设备准备消息：'+str(self.msg[0]))
+                        # self.status.append('收到设备准备消息：'+str(self.msg[0]))
                         self.out_log(0, self.msg[0])
                         self.send(self.begin_running(self.response, self.task))
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] == 'waiting_open':
-                        self.status.append('收到设备等待开门消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备等待开门消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
                         self.send(self.open(self.response, self.task))
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] == 'opened':
-                        self.status.append('收到设备开门完成消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备开门完成消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
-                        time.sleep(10)
                         self.status.append('等待10s转动皮带，请将桶放入或者取出')
-                        if self.buc_in == 0 & self.is_receive_bucket:
-                            self.send(self.pail_storing(self.response, self.task))
-                            self.buc_in = 1
-                        elif self.buc_in == 1 :
-                            self.send(self.pail_retrieving(self.response, self.task))
-                            self.buc_in = 0
+                        time.sleep(10)
+                        # if self.buc_in == 0 & self.is_receive_bucket:
+                        #     self.send(self.pail_storing(self.response, self.task))
+                        #     self.buc_in = 1
+                        # elif self.buc_in == 1 :
+                        self.send(self.pail_retrieving(self.response, self.task))
+                            # self.buc_in = 0
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] == 'waiting_close':
-                        self.status.append('收到设备等待关门消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备等待关门消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
-                        self.send(self.close(self.response, self.task))
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] in ['end', 'abnormal_end', 'reject']:
-                        self.status.append('收到设备结束或者异常消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备结束或者异常消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
                         self.status.append('取盒流程结束')
                         self.status.append('end')
@@ -363,16 +369,62 @@ class Dispatch():
         self.send(self.moving_begin(data))
         while True:
             if self.msg:
-                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('Response') != 'report_data':
+                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('response') != 'task_activate':
                     if self.msg[0]['data']['type'] == 'ready':
-                        self.status.append('收到设备准备消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备准备消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
                         self.send(self.begin_running(self.response, self.task))
                         self.msg.pop(0)
                     elif self.msg[0]['data']['type'] in ['end', 'abnormal_end', 'reject']:
-                        self.status.append('收到设备结束或者异常消息：' + str(self.msg[0]))
+                        # self.status.append('收到设备结束或者异常消息：' + str(self.msg[0]))
                         self.out_log(0, self.msg[0])
                         self.status.append('挑管流程结束')
+                        self.status.append('end')
+                        self.msg.pop(0)
+                        break
+                    else:
+                        self.out_log(0, self.msg[0])
+                        self.msg.pop(0)
+                else:
+                    self.msg.pop(0)
+            else:
+                continue
+
+
+    def buc_sto_or_ret(self,way):
+        if way == 1:
+            self.response = 'bucket_storing'
+        else:
+            self.response = 'bucket_retrieving'
+        self.task = self.get_task_id()
+        self.log.info('---------------------开始{}桶任务---------------------'.format('存' if way else '取'))
+        self.status.append('开始{}桶任务'.format('存' if way else '取'))
+        self.send(self.open(self.response,self.task))
+        while True:
+            if self.msg:
+                if self.msg[0].get('response') != 'report_data' and self.msg[0].get('response') != 'task_activate':
+                    if self.msg[0]['data']['type'] == 'opened':
+                        self.status.append('收到设备开门完成消息：' + str(self.msg[0]))
+                        self.out_log(0, self.msg[0])
+                        time.sleep(10)
+                        self.status.append('等待10s转动皮带，请将桶放入或者取出')
+                        # if self.buc_in == 0 & self.is_receive_bucket:
+                        if way:
+                            self.send(self.pail_storing(self.response, self.task))
+                            self.buc_in = 1
+                        # elif self.buc_in == 1:
+                        else:
+                            self.send(self.pail_retrieving(self.response, self.task))
+                            self.buc_in = 0
+                        self.msg.pop(0)
+                    elif self.msg[0]['data']['type'] == 'waiting_close':
+                        # self.status.append('收到设备等待关门消息：' + str(self.msg[0]))
+                        self.out_log(0, self.msg[0])
+                        self.msg.pop(0)
+                    elif self.msg[0]['data']['type'] =='closed':
+                        # self.status.append('收到设备关门消息：' + str(self.msg[0]))
+                        self.out_log(0, self.msg[0])
+                        self.status.append('{}桶流程结束'.format('存' if way else '取'))
                         self.status.append('end')
                         self.msg.pop(0)
                         break

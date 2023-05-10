@@ -5,6 +5,7 @@ import os,yaml
 from blueprints.dispatch_test import dispatch
 from blueprints.action_test import action
 from common.base_method import get_all_config
+from gevent import pywsgi
 
 app = Flask(__name__)
 app.register_blueprint(dispatch)
@@ -34,4 +35,7 @@ def action_test():
 
 
 if __name__ == '__main__':
+    # server = pywsgi.WSGIServer(('0.0.0.0',5000),app)
+    # server.serve_forever()
     app.run(debug=True)
+    # print(os.urandom(24))
